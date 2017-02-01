@@ -5,7 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Model.Simulator;
-
+/**
+ * 
+ * @author Bert de Boer
+ *
+ */
 public class Gui extends JFrame implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
