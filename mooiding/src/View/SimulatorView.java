@@ -1,5 +1,6 @@
 package View;
 // Imports
+//sfsdjfb
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
@@ -26,11 +27,14 @@ public class SimulatorView extends JFrame implements ActionListener {
 
         Container contentPane = getContentPane();
      
-        JPanel toolbar = new JPanel();
-        toolbar.setLayout(new GridLayout(1, 0));
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new GridLayout(1, 0));
+
+        JPanel labels = new JPanel();
+        labels.setLayout(new GridLayout(1, 0));
         
         JPanel flow = new JPanel(new GridLayout(1, 0));
-        flow.add(toolbar);
+        flow.add(buttons);
         
         contentPane.add(flow, BorderLayout.SOUTH );
         contentPane.add(carParkView, BorderLayout.CENTER);
@@ -41,7 +45,7 @@ public class SimulatorView extends JFrame implements ActionListener {
         startButton.setBackground(Color.blue);
         startButton.setForeground(Color.white);
         startButton.addActionListener(this);
-        toolbar.add(startButton);
+        buttons.add(startButton);
         
         //One step button        
         JButton stepButton = new JButton("Step one minute");
@@ -49,7 +53,7 @@ public class SimulatorView extends JFrame implements ActionListener {
         stepButton.setBackground(Color.red);
         stepButton.setForeground(Color.white);
         stepButton.addActionListener(this);
-        toolbar.add(stepButton); 
+        buttons.add(stepButton); 
         
         //100 steps button        
         JButton step100Button = new JButton("Step 100 minutes");
@@ -57,7 +61,7 @@ public class SimulatorView extends JFrame implements ActionListener {
         step100Button.setBackground(Color.blue);
         step100Button.setForeground(Color.white);
         step100Button.addActionListener(this);
-        toolbar.add(step100Button); 
+        buttons.add(step100Button); 
         
         //Pause button       
         JButton pauseButton = new JButton("Pause");
@@ -65,7 +69,7 @@ public class SimulatorView extends JFrame implements ActionListener {
         pauseButton.setBackground(Color.red);
         pauseButton.setForeground(Color.white);
         pauseButton.addActionListener(this);
-        toolbar.add(pauseButton); 
+        buttons.add(pauseButton); 
         
         //Quit button        
         JButton quitButton = new JButton("Quit");
@@ -73,7 +77,7 @@ public class SimulatorView extends JFrame implements ActionListener {
         quitButton.setBackground(Color.blue);
         quitButton.setForeground(Color.white);
         quitButton.addActionListener(this);
-        toolbar.add(quitButton);
+        buttons.add(quitButton);
 
         pack();
         

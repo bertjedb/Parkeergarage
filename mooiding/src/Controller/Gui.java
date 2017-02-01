@@ -17,11 +17,14 @@ public class Gui extends JFrame implements ActionListener {
 
 		Container contentPane = getContentPane();
 		
-        JPanel toolbar = new JPanel();
-        toolbar.setLayout(new GridLayout(1, 0));
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new GridLayout(1, 0));
+        
+        JPanel labels = new JPanel();
+        labels.setLayout(new GridLayout(1, 0));
         
         JPanel flow = new JPanel();
-        flow.add(toolbar);
+        flow.add(buttons);
 
         JButton startButton = new JButton("Start");
         JButton pauseButton = new JButton("Pause");
@@ -35,11 +38,11 @@ public class Gui extends JFrame implements ActionListener {
         step100Button.addActionListener(this);
         quitButton.addActionListener(this);
 
-        toolbar.add(startButton);
-        toolbar.add(quitButton);
-        toolbar.add(stepButton);   
-        toolbar.add(step100Button); 
-        toolbar.add(pauseButton);        
+        buttons.add(startButton);
+        buttons.add(quitButton);
+        buttons.add(stepButton);   
+        buttons.add(step100Button); 
+        buttons.add(pauseButton);        
 
         contentPane.add(flow, BorderLayout.NORTH);
         
