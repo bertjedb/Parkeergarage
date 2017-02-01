@@ -104,6 +104,10 @@ public class SimulatorView extends JFrame implements ActionListener {
                 	Simulator.simulator.oneStep();                    
                 }
                 
+                if(command == "Step 100 minutes") {
+                	Simulator.simulator.step100();                    
+                }
+                
                 if(command == "Pause Program") {               	
                 	Simulator.simulator.pauseProgram();                    
                 }

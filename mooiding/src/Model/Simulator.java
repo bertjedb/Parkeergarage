@@ -21,7 +21,7 @@ public class Simulator  {
     private int day = 0; 
     private int hour = 0;
     private int minute = 0;
-    private int tickBreak = 80;
+    private int tickBreak = 100;
 
     // Program running state
     public static boolean programRunning = false;
@@ -51,22 +51,22 @@ public Simulator() {
 public void startProgram(){
 	programRunning = true;
     while(programRunning == true){
-    		runProgram(10000);
+    		runProgram(50);
     }
 };
 
 
 //Method to make one step in the program
 public void oneStep(){
-	for(int i = 0; i<1; i++) {
-        advanceTime();
+	for(int i = 0; i < 2; i++) {
+        tick();
 	}
 }
 
 //Method to make 100 steps in the program
-public void Step100(){
+public void step100(){
 	for(int i = 0; i<100; i++) {
-      advanceTime();
+      tick();
 	}
 }
 // Method for pausing the program

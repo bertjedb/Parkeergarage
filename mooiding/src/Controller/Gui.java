@@ -71,7 +71,7 @@ public class Gui extends JFrame implements ActionListener {
                 }
                 
                 if(command == "Step 100 minutes") {
-                	Simulator.simulator.oneStep();                    
+                	Simulator.simulator.step100();                    
                 }
                 
                 if(command == "Pause Program") {
