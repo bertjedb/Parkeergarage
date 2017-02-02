@@ -1,4 +1,9 @@
 package Model;
+/**
+ * @author Team Sublime 
+ * @klas ITV1A
+ * @version 2-2-2017
+ */
 
 
 public class Location {

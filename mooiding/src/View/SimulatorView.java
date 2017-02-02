@@ -1,12 +1,18 @@
-package View;
+	package View;
 // Imports
 //sfsdjfb
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 import Model.*;
+/**
+ * @author Team Sublime 
+ * @klas ITV1A
+ * @version 2-2-2017
+ */
 
 public class SimulatorView extends JFrame implements ActionListener {
+	
 	private static final long serialVersionUID = 1L;
 	private CarParkView carParkView;
     private int numberOfFloors;
@@ -16,6 +22,13 @@ public class SimulatorView extends JFrame implements ActionListener {
     private Car[][][] cars;
     private ActionEvent event;
 
+    /*
+     * Constructor voor class SimulatorView
+     * @param numberOfFloors zijn de aantal verdiepingen
+     * @param numberOfRows zijn de aantal rijen
+     * @param numberOfPlaces aantal plekken in de simulatie
+     * @param simulator
+     */
     public SimulatorView(int numberOfFloors, int numberOfRows, int numberOfPlaces,Simulator simulator) {
         this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
@@ -27,16 +40,22 @@ public class SimulatorView extends JFrame implements ActionListener {
 
         Container contentPane = getContentPane();
      
+        //Worden buttons toegevoegd aan de Panel.
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(1, 0));
 
+        //Worden labels toegevoegd aan de Panel.
         JPanel labels = new JPanel();
         labels.setLayout(new GridLayout(1, 0));
         
+        //Buttons toegevoegd aan flow.
         JPanel flow = new JPanel(new GridLayout(1, 0));
         flow.add(buttons);
         
+        //Plaatsing van de buttons onderin het scherm.
         contentPane.add(flow, BorderLayout.SOUTH );
+        
+        //Zorgt dat simulatie in midden van het scherm komt.
         contentPane.add(carParkView, BorderLayout.CENTER);
         
         //Start button
@@ -86,17 +105,33 @@ public class SimulatorView extends JFrame implements ActionListener {
         updateView();
       }
     
-    
+    /*
+     * @param e wordt gelijkgesteld aan event.
+     * 
+     */
     public void setActionEvent(ActionEvent e) {
         event = e;
     }
     
+    /*
+     * @return returned event.
+     */
     public ActionEvent getActionEvent() {
         return event;
     }
     
+    /*
+     * (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+   
+   
     public void actionPerformed(ActionEvent e) {
         setActionEvent(e);
+        
+        /*
+         * Wordt nieuwe thread aangemaakt. 
+         */
         
         Thread newThread = new Thread() {
             public void run() {
@@ -104,24 +139,27 @@ public class SimulatorView extends JFrame implements ActionListener {
                 ActionEvent event = getActionEvent();                
                 String command = event.getActionCommand();
                 
+                //Zet actie achter "Step one minute" button.
                 if(command == "Step one minute") {
                 	Simulator.simulator.oneStep();                    
                 }
                 
+                //Zet actie achter "Step 100 minutes" button.
                 if(command == "Step 100 minutes") {
                 	Simulator.simulator.step100();                    
                 }
                 
+                //Zorgt dat het programma gepauzeerd kan worden.
                 if(command == "Pause Program") {               	
                 	Simulator.simulator.pauseProgram();                    
                 }
-                               
+                //Zorgt dat het programma begint door op start button te drukken.              
                 if (command == "Start") {
                 	if (Model.Simulator.programRunning == false){
                 		Simulator.simulator.startProgram();                    
                 	}
                 }
-                                                   
+                 //Zorgt dat je de simulatie kan stoppen.                                  
                 if (command == "Quit the program") {
                 	Simulator.simulator.quitProgram();                                        
                 }                
@@ -129,26 +167,34 @@ public class SimulatorView extends JFrame implements ActionListener {
         };        
         newThread.start();    
     }
+    //Update parkeergarage view
     public void updateView() {
         carParkView.updateView();
     }
     
+    //@return aantal verdiepingen
 	public int getNumberOfFloors() {
         return numberOfFloors;
     }
 
+	//@return aantal rijen
     public int getNumberOfRows() {
         return numberOfRows;
     }
 
+    //@return aantal plaatsen
     public int getNumberOfPlaces() {
         return numberOfPlaces;
     }
 
+    //@return aantal vrije plekken
     public int getNumberOfOpenSpots(){
     	return numberOfOpenSpots;
     }
     
+    /*
+     * Method die locatie van auto's returned.
+     */
     public Car getCarAt(Location location) {
         if (!locationIsValid(location)) {
             return null;
@@ -156,6 +202,9 @@ public class SimulatorView extends JFrame implements ActionListener {
         return cars[location.getFloor()][location.getRow()][location.getPlace()];
     }
 
+    /*
+     * Method die auto kan plaatsen.
+     */
     public boolean setCarAt(Location location, Car car) {
         if (!locationIsValid(location)) {
             return false;
@@ -170,6 +219,9 @@ public class SimulatorView extends JFrame implements ActionListener {
         return false;
     }
 
+    /*
+     * Method om auto van te verwijderen.
+     */
     public Car removeCarAt(Location location) {
         if (!locationIsValid(location)) {
             return null;
@@ -184,6 +236,9 @@ public class SimulatorView extends JFrame implements ActionListener {
         return car;
     }
 
+    /*
+     * Method om locatie van eerst volgende vrije plek op te vragen.
+     */
     public Location getFirstFreeLocation() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -198,6 +253,9 @@ public class SimulatorView extends JFrame implements ActionListener {
         return null;
     }
 
+    /*
+     * Method om eerst volgende vertrekkende auto te laten zien.
+     */
     public Car getFirstLeavingCar() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -213,6 +271,7 @@ public class SimulatorView extends JFrame implements ActionListener {
         return null;
     }
 
+    //
     public void tick() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -227,6 +286,7 @@ public class SimulatorView extends JFrame implements ActionListener {
         }
     }
 
+   // 
     private boolean locationIsValid(Location location) {
         int floor = location.getFloor();
         int row = location.getRow();
@@ -240,7 +300,7 @@ public class SimulatorView extends JFrame implements ActionListener {
     private class CarParkView extends JPanel {
         
         /**
-		 * 
+		 * Instantie variabelen
 		 */
 		private static final long serialVersionUID = 1L;
 		private Dimension size;

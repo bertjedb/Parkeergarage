@@ -1,6 +1,14 @@
 package Model;
+//Imports
 import java.util.Random;
 import View.SimulatorView;
+
+/**
+ * @author Team Sublime 
+ * @klas ITV1A
+ * @version 2-2-2017
+ */
+
 
 public class Simulator  {
 	
@@ -9,6 +17,7 @@ public class Simulator  {
 	private static final String PASS = "2";
 	private static final String ABO = "3";
 	
+	//Instantie variabelen.
 	public static Simulator simulator;
 	private QueueCars queuePassEntrance;
 	private QueueCars queueForPaying;
@@ -39,6 +48,7 @@ public class Simulator  {
          simulator = new Simulator();
       }
 
+    //Constructor voor Simulator Class
 public Simulator() {
 	queueCarEntrance = new QueueCars();
 	queuePassEntrance = new QueueCars();
@@ -78,7 +88,7 @@ public void pauseProgram(){
 public void quitProgram(){
 	System.exit(0);
 }
-
+//Method om programma te runnen
 public void runProgram(int steps) {           
 		for (int i = 0; i < steps; i++) {
 			if(programRunning == true){
@@ -89,7 +99,7 @@ public void runProgram(int steps) {
 	}
 }	
 
-
+//Method stap vooruit in simulatie.
 private void tick() {
 	advanceTime();
 	handleExit();
@@ -118,24 +128,28 @@ public void advanceTime() {
             day -= 7;
         }
 	}
+//Inrijden van garage
 private void handleEntrance(){
 	carsArriving();
 	carsEntering(queuePassEntrance);
 	carsEntering(queueCarEntrance);  	
 }
 
+//Uitrijden van garage
 private void handleExit(){
     carsReadyToLeave();
     carsPaying();
     carsLeaving();
 }
 
+//Update views
 private void updateViews(){
 	simulatorView.tick();
     // Update the car park view.
     simulatorView.updateView();	
 }
 
+//Aantal arriverende auto's. 
 private void carsArriving(){
 	int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
     addArrivingCars(numberOfCars, AD_HOC);    	
@@ -145,6 +159,7 @@ private void carsArriving(){
     addArrivingCars(numberOfCars, ABO);  
 }
 
+//Aantal auto's die garage binnen gaan.
 private void carsEntering(QueueCars queue){
     int i=0;
     // Remove car from the front of the queue and assign to a parking space.
@@ -158,6 +173,7 @@ private void carsEntering(QueueCars queue){
     }
 }
 
+//Auto's die willen vertrekken.
 private void carsReadyToLeave(){
     // Add leaving cars to the payment queue.
     Car car = simulatorView.getFirstLeavingCar();
@@ -228,6 +244,7 @@ private void addArrivingCars(int numberOfCars, String type){
 	}
 }
 
+//Auto verlaat parkeerplek.
 private void carLeavesSpot(Car car){
 	simulatorView.removeCarAt(car.getLocation());
     queueExit.addCar(car);
