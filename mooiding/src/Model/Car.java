@@ -3,6 +3,12 @@ package Model;
 
 import java.awt.*;
 
+/**
+ * @author Team Sublime 
+ * @klas ITV1A
+ * @version 2-2-2017
+ */
+
 public abstract class Car {
 
     private Location location;
