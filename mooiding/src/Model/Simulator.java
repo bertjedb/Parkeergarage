@@ -1,5 +1,4 @@
 package Model;
-//Imports
 import java.util.Random;
 import View.SimulatorView;
 
@@ -10,7 +9,7 @@ import View.SimulatorView;
  */
 
 
-public class Simulator  {
+public class Simulator implements Runnable{
 	
 	//Constants for cars
 	private static final String AD_HOC = "1";
@@ -30,19 +29,19 @@ public class Simulator  {
     private int day = 0; 
     private int hour = 0;
     private int minute = 0;
-    private int tickBreak = 100;
+    private int tickPause = 100;
 
     // Program running state
-    public static boolean programRunning = false;
+    private boolean run = false;
     
     int weekDayArrivals= 100; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
     int weekDayPassArrivals= 50; // average number of arriving cars per hour
     int weekendPassArrivals = 5; // average number of arriving cars per hour
 
-    int enterSpeed = 50; // number of cars that can enter per minute
+    int enterSpeed = 1; // number of cars that can enter per minute
     int paymentSpeed = 5; // number of cars that can pay per minute
-    int exitSpeed = 5; // number of cars that can leave per minute
+    int exitSpeed = 1; // number of cars that can leave per minute
     
     public static void main(String[] args){
          simulator = new Simulator();
@@ -59,11 +58,8 @@ public Simulator() {
  
 // Method for starting the program
 public void startProgram(){
-	programRunning = true;
-    while(programRunning == true){
-    		runProgram(50);
-    }
-};
+	run();
+}
 
 
 //Method to make one step in the program
@@ -81,21 +77,20 @@ public void step100(){
 }
 // Method for pausing the program
 public void pauseProgram(){
-	programRunning = false;
+	run = false;
 }
 
 // Method for quitting program
 public void quitProgram(){
-	System.exit(0);
+    System.exit(0);
 }
 //Method om programma te runnen
-public void runProgram(int steps) {           
-		for (int i = 0; i < steps; i++) {
-			if(programRunning == true){
+public void run() {           
+	run = true;	
+	for (int i = 0; i < 10000; i++) {
+			if(run){
 			tick();
-			} else {
-				break;
-		}
+	    }		
 	}
 }	
 
@@ -106,7 +101,7 @@ private void tick() {
 	updateViews();
 	// Pause.
     try {
-        Thread.sleep(tickBreak);
+        Thread.sleep(tickPause);
     } catch (InterruptedException e) {
         e.printStackTrace();
     }

@@ -1,4 +1,4 @@
-	package View;
+package View;
 // Imports
 //sfsdjfb
 import java.awt.event.*;
@@ -150,17 +150,15 @@ public class SimulatorView extends JFrame implements ActionListener {
                 }
                 
                 //Zorgt dat het programma gepauzeerd kan worden.
-                if(command == "Pause Program") {               	
+                if(command == "Pause") {               	
                 	Simulator.simulator.pauseProgram();                    
                 }
                 //Zorgt dat het programma begint door op start button te drukken.              
                 if (command == "Start") {
-                	if (Model.Simulator.programRunning == false){
                 		Simulator.simulator.startProgram();                    
-                	}
                 }
                  //Zorgt dat je de simulatie kan stoppen.                                  
-                if (command == "Quit the program") {
+                if (command == "Quit") {
                 	Simulator.simulator.quitProgram();                                        
                 }                
             }          
