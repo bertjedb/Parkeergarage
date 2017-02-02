@@ -1,5 +1,11 @@
 package Model;
 
+/**
+ * @author Team Sublime 
+ * @klas ITV1A
+ * @version 2-2-2017
+ */
+
 
 import java.util.Random;
 import java.awt.*;
@@ -7,6 +13,7 @@ import java.awt.*;
 public class AdHocCar extends Car {
 	private static final Color COLOR=Color.red;
 	
+	//Constructor AdHocCar
     public AdHocCar() {
     	Random random = new Random();
     	int stayMinutes = (int) (15 + random.nextFloat() * 1 * 60);
@@ -14,6 +21,7 @@ public class AdHocCar extends Car {
         this.setHasToPay(true);
     }
     
+    //@return color
     public Color getColor(){
     	return COLOR;
     }
