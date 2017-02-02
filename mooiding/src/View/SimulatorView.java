@@ -48,9 +48,10 @@ public class SimulatorView extends JFrame implements ActionListener {
         JPanel labels = new JPanel();
         labels.setLayout(new GridLayout(1, 0));
         
-        //Buttons toegevoegd aan flow.
+        //Buttons en labels toegevoegd aan flow.
         JPanel flow = new JPanel(new GridLayout(1, 0));
         flow.add(buttons);
+        flow.add(labels);    
         
         //Plaatsing van de buttons onderin het scherm.
         contentPane.add(flow, BorderLayout.SOUTH );
@@ -90,6 +91,13 @@ public class SimulatorView extends JFrame implements ActionListener {
         quitButton.addActionListener(this);
         buttons.add(quitButton);
 
+        //Money label
+        JLabel moneyLabel = new JLabel("Money");
+        moneyLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        moneyLabel.setText("Money = " + Model.Simulator.money);
+        labels.add(moneyLabel);
+        
+        
         pack();
         
         setVisible(true);

@@ -1,4 +1,5 @@
 package Model;
+import java.awt.Color;
 import java.util.Random;
 import View.SimulatorView;
 
@@ -22,7 +23,7 @@ public class Simulator implements Runnable{
 	private QueueCars queueForPaying;
 	private QueueCars queueCarEntrance;
     private QueueCars queueExit;
-    
+    public static int money = 0;
 
     private SimulatorView simulatorView;
   
@@ -188,12 +189,12 @@ private void carsPaying(){
     // Let cars pay.
 	int i=0;
 	while (queueForPaying.carsInQueue()>0 && i < paymentSpeed){
-        Car car = queueForPaying.removeCar();
-        // TODO Handle payment.
+        Car car = queueForPaying.removeCar();         
         carLeavesSpot(car);
         i++;
-	}
-}
+	  }
+}    
+
 
 private void carsLeaving(){
     // Let cars leave.

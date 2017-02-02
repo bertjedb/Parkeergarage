@@ -68,5 +68,8 @@ public abstract class Car {
         minutesLeft--;
     }
     
-    public abstract Color getColor();
+    public Color getColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
