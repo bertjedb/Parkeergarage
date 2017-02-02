@@ -12,7 +12,7 @@ import java.awt.*;
  */
 
 public class ParkingPassCar extends Car {
-	private static final Color COLOR=Color.blue;
+	private static final Color COLOR=Color.red;
 	
 	/*
 	 * Constructor van ParkingPassCar

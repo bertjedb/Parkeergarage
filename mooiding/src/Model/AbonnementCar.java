@@ -5,7 +5,7 @@ import java.util.Random;
 import java.awt.*;
 
 public class AbonnementCar extends Car {
-	private static final Color COLOR=Color.yellow;
+	private static final Color COLOR=Color.black;
 	
     public AbonnementCar() {
     	Random random = new Random();

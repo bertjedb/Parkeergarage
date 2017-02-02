@@ -61,40 +61,32 @@ public class SimulatorView extends JFrame implements ActionListener {
         //Start button
         JButton startButton = new JButton("Start");
         startButton.setPreferredSize(new Dimension(50, 50));
-        startButton.setBackground(Color.blue);
-        startButton.setForeground(Color.white);
+        startButton.setBackground(Color.green);
         startButton.addActionListener(this);
         buttons.add(startButton);
         
         //One step button        
         JButton stepButton = new JButton("Step one minute");
         stepButton.setPreferredSize(new Dimension(50, 50));
-        stepButton.setBackground(Color.red);
-        stepButton.setForeground(Color.white);
         stepButton.addActionListener(this);
         buttons.add(stepButton); 
         
         //100 steps button        
         JButton step100Button = new JButton("Step 100 minutes");
         step100Button.setPreferredSize(new Dimension(50, 50));
-        step100Button.setBackground(Color.blue);
-        step100Button.setForeground(Color.white);
         step100Button.addActionListener(this);
         buttons.add(step100Button); 
         
         //Pause button       
         JButton pauseButton = new JButton("Pause");
         pauseButton.setPreferredSize(new Dimension(50, 50));
-        pauseButton.setBackground(Color.red);
-        pauseButton.setForeground(Color.white);
         pauseButton.addActionListener(this);
         buttons.add(pauseButton); 
         
         //Quit button        
         JButton quitButton = new JButton("Quit");
         quitButton.setPreferredSize(new Dimension(50, 50));
-        quitButton.setBackground(Color.blue);
-        quitButton.setForeground(Color.white);
+        quitButton.setBackground(Color.red);
         quitButton.addActionListener(this);
         buttons.add(quitButton);
 
