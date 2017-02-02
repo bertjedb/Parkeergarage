@@ -1,7 +1,6 @@
 package Controller;
 //imports
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Model.Simulator;
@@ -10,29 +9,15 @@ import Model.Simulator;
  * @author Bert de Boer
  *
  */
-public class Gui extends JFrame implements ActionListener {
-	
-	private static final long serialVersionUID = 1L;
+public class Gui implements ActionListener {
     private ActionEvent event;
     public JTable table;
 
-	public Gui(){					
+	public Gui(){
 	}
-	
-	
-	public void setActionEvent(ActionEvent e) {
-        event = e;
-    }
     
-    public ActionEvent getActionEvent() {
-        return event;
-    }
-    
-    Thread newThread = new Thread();
-    
-    public void run() {
-  	
-        ActionEvent event = getActionEvent();                
+	public void actionPerformed(ActionEvent e) {   
+  	                
         String command = event.getActionCommand();
         
         if(command == "Step one minute") {
@@ -44,12 +29,7 @@ public class Gui extends JFrame implements ActionListener {
         }
         
         if(command == "Pause Program") {
-               try {
-				newThread.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
+        	Simulator.simulator.pauseProgram();
         }
                        
         if (command == "Start") {
@@ -58,11 +38,6 @@ public class Gui extends JFrame implements ActionListener {
                                         
         if (command == "Quit the program") {
         	Simulator.simulator.quitProgram();                                        
-        }                          
-};        
-    public void actionPerformed(ActionEvent e) {   
-    	setActionEvent(e);
-        run();
-        newThread.start();    
-    }
+        }                                  
+	}
 }

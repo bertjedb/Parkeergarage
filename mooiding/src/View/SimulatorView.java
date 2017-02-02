@@ -112,17 +112,15 @@ public class SimulatorView extends JFrame implements ActionListener {
                 	Simulator.simulator.step100();                    
                 }
                 
-                if(command == "Pause Program") {               	
+                if(command == "Pause") {               	
                 	Simulator.simulator.pauseProgram();                    
                 }
                                
                 if (command == "Start") {
-                	if (Model.Simulator.programRunning == false){
                 		Simulator.simulator.startProgram();                    
-                	}
                 }
                                                    
-                if (command == "Quit the program") {
+                if (command == "Quit") {
                 	Simulator.simulator.quitProgram();                                        
                 }                
             }          

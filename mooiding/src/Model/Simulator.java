@@ -1,10 +1,8 @@
 package Model;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Random;
 import View.SimulatorView;
 
-public class Simulator{
+public class Simulator implements Runnable{
 	
 	//Constants for cars
 	private static final String AD_HOC = "1";
@@ -23,12 +21,10 @@ public class Simulator{
     private int day = 0; 
     private int hour = 0;
     private int minute = 0;
-    private int tickBreak = 100;
+    private int tickPause = 100;
 
     // Program running state
-    public static boolean programRunning = false;
-    
-    private ActionEvent event;
+    private boolean run = false;
     
     int weekDayArrivals= 100; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
@@ -53,8 +49,7 @@ public Simulator() {
  
 // Method for starting the program
 public void startProgram(){
-	programRunning = true;
-    		runProgram(50);    
+	run();
 }
 
 
@@ -71,28 +66,25 @@ public void step100(){
       tick();
 	}
 }
+
 // Method for pausing the program
 public void pauseProgram(){
-	programRunning = false;
-	
+	run = false;
 }
 
 // Method for quitting program
 public void quitProgram(){
-	System.exit(0);
+    System.exit(0);
 }
 
-public void runProgram(int steps) {           
-		for (int i = 0; i < steps; i++) {
-			while(programRunning == true){
+public void run() {           
+	run = true;	
+	for (int i = 0; i < 10000; i++) {
+			if(run){
 			tick();
-			} 
-			while(programRunning == false) {
-		break;
-		}
+	    }		
 	}
 }	
-
 
 private void tick() {
 	advanceTime();
@@ -100,7 +92,7 @@ private void tick() {
 	updateViews();
 	// Pause.
     try {
-        Thread.sleep(tickBreak);
+        Thread.sleep(tickPause);
     } catch (InterruptedException e) {
         e.printStackTrace();
     }
@@ -236,8 +228,11 @@ private void carLeavesSpot(Car car){
 	simulatorView.removeCarAt(car.getLocation());
     queueExit.addCar(car);
 }
-
+	
 }
+
+
+
 
 
 
