@@ -23,6 +23,7 @@ public class SimulatorView extends JFrame implements ActionListener {
     private ActionEvent event;
     private JLabel moneyLabel;
     private JLabel carLabel;
+    private JLabel queueLabel;
 
     /*
      * Constructor voor class SimulatorView
@@ -31,14 +32,15 @@ public class SimulatorView extends JFrame implements ActionListener {
      * @param numberOfPlaces aantal plekken in de simulatie
      * @param simulator
      */
-    public SimulatorView(int numberOfFloors, int numberOfRows, int numberOfPlaces,Simulator simulator) {
+    public SimulatorView(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
+    	// ,Model simulator
         this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
         this.numberOfOpenSpots =numberOfFloors*numberOfRows*numberOfPlaces;
         cars = new Car[numberOfFloors][numberOfRows][numberOfPlaces];
         
-        carParkView = new CarParkView();
+        carParkView = new CarParkView(this);
 
         Container contentPane = getContentPane();
      
@@ -50,16 +52,22 @@ public class SimulatorView extends JFrame implements ActionListener {
         JPanel labels = new JPanel();
         labels.setLayout(new GridLayout(1, 0));
         
-        //Buttons en labels toegevoegd aan flow.
+        //Buttons toegevoegd aan flow.
         JPanel flow = new JPanel(new GridLayout(0, 1));
         flow.add(buttons);
-        flow.add(labels);    
+        
+        //labels toegevoegd aan flow2
+        JPanel flow2 = new JPanel(new GridLayout(1, 0));
+        flow2.add(labels);    
         
         //Plaatsing van de buttons onderin het scherm.
         contentPane.add(flow, BorderLayout.SOUTH );
         
+        //Plaatsing van de buttons onderin het scherm.
+        contentPane.add(flow2, BorderLayout.CENTER );
+        
         //Zorgt dat simulatie in midden van het scherm komt.
-        contentPane.add(carParkView, BorderLayout.CENTER);
+        contentPane.add(carParkView, BorderLayout.NORTH);
         
         //Start button
         JButton startButton = new JButton("Start");
@@ -94,15 +102,21 @@ public class SimulatorView extends JFrame implements ActionListener {
         buttons.add(quitButton);
 
         //Money label
-        JLabel moneyLabel = new JLabel("Money");
+        this.moneyLabel = new JLabel("Money");
         moneyLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        moneyLabel.setText(String.valueOf(Model.Simulator.getAmountOfMoney()));
+        moneyLabel.setText(String.valueOf(Model.getAmountOfMoney()));
         labels.add(moneyLabel);
         
         //Number of Cars label
-        JLabel carLabel = new JLabel("Cars in queue");
+        this.carLabel = new JLabel("Cars in garage");
         carLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        carLabel.setText("Number of cars = " + Model.Simulator.getAmountOfCars() + "/540");
+        carLabel.setText("Number of cars = " + Model.getAmountOfMoney() + "/540");
+        labels.add(carLabel);
+        
+        //Number of Cars label
+        this.queueLabel = new JLabel("Cars in queue");
+        carLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        carLabel.setText("Queue = " + Model.getAmountOfMoney());
         labels.add(carLabel);
         
         pack();
@@ -148,25 +162,25 @@ public class SimulatorView extends JFrame implements ActionListener {
                 
                 //Zet actie achter "Step one minute" button.
                 if(command == "Step one minute") {
-                	Simulator.simulator.oneStep();                    
+                	Model.simulator.oneStep();                    
                 }
                 
                 //Zet actie achter "Step 100 minutes" button.
                 if(command == "Step 100 minutes") {
-                	Simulator.simulator.step100();                    
+                	Model.simulator.step100();                    
                 }
                 
                 //Zorgt dat het programma gepauzeerd kan worden.
                 if(command == "Pause") {               	
-                	Simulator.simulator.pauseProgram();                    
+                	Model.simulator.pauseProgram();                    
                 }
                 //Zorgt dat het programma begint door op start button te drukken.              
                 if (command == "Start") {
-                		Simulator.simulator.startProgram();                    
+                		Model.simulator.startProgram();                    
                 }
                  //Zorgt dat je de simulatie kan stoppen.                                  
                 if (command == "Quit") {
-                	Simulator.simulator.quitProgram();                                        
+                	Model.simulator.quitProgram();                                        
                 }                
             }          
         };        
@@ -174,8 +188,18 @@ public class SimulatorView extends JFrame implements ActionListener {
     }
     //Update parkeergarage view
     public void updateView() {
-        carParkView.updateView();
+        updateLabels();
+ 
+    	carParkView.updateView();
     }
+    
+    public  void updateLabels(){
+    	 if (moneyLabel != null && carLabel != null){
+    		 moneyLabel.setText("Total money: " + Model.getAmountOfMoney() + ",-");
+    		 carLabel.setText("Number of cars = " + Model.getAmountOfCars() + "/540");
+        }
+    }
+    
     
     //@return aantal verdiepingen
 	public int getNumberOfFloors() {
@@ -219,7 +243,7 @@ public class SimulatorView extends JFrame implements ActionListener {
             cars[location.getFloor()][location.getRow()][location.getPlace()] = car;
             car.setLocation(location);
             numberOfOpenSpots--;
-            Model.Simulator.amountOfCars++;
+            Model.amountOfCars++;
             return true;
         }
         return false;
@@ -329,79 +353,5 @@ public class SimulatorView extends JFrame implements ActionListener {
         return true;
     }
     
-    private class CarParkView extends JPanel {
-        
-        /**
-		 * Instantie variabelen
-		 */
-		private static final long serialVersionUID = 1L;
-		private Dimension size;
-        private Image carParkImage;    
-    
-        /**
-         * Constructor for objects of class CarPark
-         */
-        public CarParkView() {
-            size = new Dimension(0, 0);
-        }
-    
-        /**
-         * Overridden. Tell the GUI manager how big we would like to be.
-         */
-        public Dimension getPreferredSize() {
-            return new Dimension(800, 500);
-        }
-    
-        /**
-         * Overriden. The car park view component needs to be redisplayed. Copy the
-         * internal image to screen.
-         */
-        public void paintComponent(Graphics g) {
-            if (carParkImage == null) {
-                return;
-            }
-    
-            Dimension currentSize = getSize();
-            if (size.equals(currentSize)) {
-                g.drawImage(carParkImage, 0, 0, null);
-            }
-            else {
-                // Rescale the previous image.
-                g.drawImage(carParkImage, 0, 0, currentSize.width, currentSize.height, null);
-            }
-        }
-    
-        public void updateView() {
-            // Create a new car park image if the size has changed.
-            if (!size.equals(getSize())) {
-                size = getSize();
-                carParkImage = createImage(size.width, size.height);
-            }
-            Graphics graphics = carParkImage.getGraphics();
-            for(int floor = 0; floor < getNumberOfFloors(); floor++) {
-                for(int row = 0; row < getNumberOfRows(); row++) {
-                    for(int place = 0; place < getNumberOfPlaces(); place++) {
-                        Location location = new Location(floor, row, place);
-                        Car car = getCarAt(location);
-                        Color color = car == null ? Color.white : car.getColor();
-                        drawPlace(graphics, location, color);
-                    }
-                }
-            }
-            repaint();
-        }
-    
-        /**
-         * Paint a place on this car park view in a given color.
-         */
-        private void drawPlace(Graphics graphics, Location location, Color color) {
-            graphics.setColor(color);
-            graphics.fillRect(
-                    location.getFloor() * 260 + (1 + (int)Math.floor(location.getRow() * 0.5)) * 75 + (location.getRow() % 2) * 20,
-                    60 + location.getPlace() * 10,
-                    20 - 1,
-                    10 - 1); // TODO use dynamic size or constants
-        }
-    }
 
 }

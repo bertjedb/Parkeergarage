@@ -2,6 +2,9 @@ package Model;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.sun.glass.ui.View;
+
 import View.SimulatorView;
 
 /**
@@ -11,17 +14,17 @@ import View.SimulatorView;
  */
 
 
-public class Simulator implements Runnable{
+public class Model implements Runnable{
 	
 	//Constants for cars
 	private static final String AD_HOC = "1";
 	private static final String PASS = "2";
 	private static final String ABO = "3";
 	//Instantie variabelen.
-	public static Simulator simulator;
+	public static Model simulator;
 	private ArrayList<Car> aboList;
 	private ArrayList<String> subList;
-	private QueueCars queueForPaying;
+	private static QueueCars queueForPaying;
 	private QueueCars queuePassEntrance;
 	private QueueCars queueCarEntrance;
 	private QueueCars queueAboEntrance;
@@ -50,17 +53,20 @@ public class Simulator implements Runnable{
     int exitSpeed = 1; // number of cars that can leave per minute
     
     public static void main(String[] args){
-         simulator = new Simulator();
+         simulator = new Model();
       }
 
     //Constructor voor Simulator Class
-public Simulator() {
+public Model() {
 	queueCarEntrance = new QueueCars();
 	queuePassEntrance = new QueueCars();
 	queueAboEntrance = new QueueCars();
 	queueForPaying = new QueueCars();
 	queueExit = new QueueCars();
-	simulatorView = new SimulatorView(3, 6, 30, this); // declare a fourth one
+	//simulatorView = new SimulatorView(3, 6, 30, this); // declare a fourth one
+	simulatorView = new SimulatorView(3, 6, 30); // declare a fourth one
+
+
 }
  
 //method for returning amount of money
@@ -72,6 +78,7 @@ public static int getAmountOfMoney(){
 public static int getAmountOfCars(){
 	return amountOfCars;
 }
+
 // Method for starting the program
 public void startProgram(){
 	if(!run){
@@ -117,6 +124,7 @@ private void tick() {
 	advanceTime();
 	handleExit();
 	updateViews();
+//	View.SimulatorView.updateLabels();
 	// Pause.
     try {
         Thread.sleep(tickPause);
@@ -199,6 +207,7 @@ private void carsEntering(QueueCars queue){
         }
     }
 }
+
 
 //Auto's die willen vertrekken.
 private void carsReadyToLeave(){

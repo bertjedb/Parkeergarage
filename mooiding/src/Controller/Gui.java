@@ -3,7 +3,7 @@ package Controller;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import Model.Simulator;
+import Model.Model;
 /**
  * 
  * @author Team Sublime 
@@ -25,27 +25,27 @@ public class Gui implements ActionListener {
         
       //Zet actie achter "Step one minute" button.
         if(command == "Step one minute") {
-        	Simulator.simulator.oneStep();                    
+        	Model.simulator.oneStep();                    
         }
         
       //Zet actie achter "Step 100 minutes" button.
         if(command == "Step 100 minutes") {
-        	Simulator.simulator.step100();                    
+        	Model.simulator.step100();                    
         }
         
       //Zet actie achter "Pause" button.
         if(command == "Pause Program") {
-        	Simulator.simulator.pauseProgram();
+        	Model.simulator.pauseProgram();
         }
            
       //Zet actie achter "Start" button.
         if (command == "Start") {
-        	Simulator.simulator.startProgram();                                      
+        	Model.simulator.startProgram();                                      
         }
         
       //Zet actie achter "Quit" button.                                
         if (command == "Quit the program") {
-        	Simulator.simulator.quitProgram();                                        
+        	Model.simulator.quitProgram();                                        
         }                                  
 	}
 }
