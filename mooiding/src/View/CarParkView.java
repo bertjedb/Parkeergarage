@@ -32,7 +32,7 @@ public class CarParkView extends JPanel {
      * Overridden. Tell the GUI manager how big we would like to be.
      */
     public Dimension getPreferredSize() {
-        return new Dimension(800, 500);
+        return new Dimension(1000, 500);
     }
 
     /**

@@ -29,10 +29,16 @@ public class Model implements Runnable{
 	private QueueCars queueCarEntrance;
 	private QueueCars queueAboEntrance;
     private QueueCars queueExit;
-    public static int money = 0;
+    public static int revenue = 0;
+    public static int estimatedRevenue = 0;
     public static int amountOfCars = 0;
     private SimulatorView simulatorView;
-  
+    private static int queueLength = 0;
+    
+    private static int amountOfAdHoc = 0;
+    private static int amountOfPass = 0;
+    private static int amountOfAbo = 0;
+    
     private int day = 0; 
     private int hour = 0;
     private int minute = 0;
@@ -69,14 +75,38 @@ public Model() {
 
 }
  
-//method for returning amount of money
-public static int getAmountOfMoney(){
-	return money;
+//method for returning amount of revenue
+public static int getAmountOfRevenue(){
+	return revenue;
+}
+
+//method for returning amount of revenue
+public static int getAmountOfAdHoc(){
+	return amountOfAdHoc;
+}
+//method for returning amount of revenue
+public static int getAmountOfPass(){
+	return amountOfPass;
+}
+//method for returning amount of revenue
+public static int getAmountOfAbo(){
+	return amountOfAbo;
+}
+
+
+//method for returning estimated revenue
+public static int getEstimatedRevenue(){
+	return estimatedRevenue;
 }
 
 //method for returning amount of cars
 public static int getAmountOfCars(){
 	return amountOfCars;
+}
+
+//method for returning amount of cars
+public static int getQueueLength(){
+	return queueLength;
 }
 
 // Method for starting the program
@@ -193,18 +223,28 @@ private void carsEntering(QueueCars queue){
         if(car.getColor() == Color.black){
         	Location subLocation = simulatorView.getFirstAboLocation();
         	simulatorView.setCarAt(subLocation, car);
+        	queueLength--;
+        	amountOfCars++;
         }
         Location freeLocation = simulatorView.getFirstFreeLocation();
         if(car.getColor() == Color.green || car.getColor() == Color.red){
         simulatorView.setCarAt(freeLocation, car);
-        if(car.getColor() == Color.green){
-        	money += 50;
-        if(car.getColor() == Color.red){
-        	money += 50;
+            queueLength--;
+            amountOfCars++;
+            if(car.getColor() == Color.green){
+            	estimatedRevenue += 20;
+            	amountOfAdHoc++;
+            }
+            if(car.getColor() == Color.red){
+            	estimatedRevenue += 10;
+            	amountOfPass++;
+            }
         }
-        i++;
+        if(car.getColor() == Color.black){
+        	amountOfAbo++;
         }
-        }
+    
+        i++;       
     }
 }
 
@@ -229,7 +269,17 @@ private void carsPaying(){
     // Let cars pay.
 	int i=0;
 	while (queueForPaying.carsInQueue()>0 && i < paymentSpeed){
-        Car car = queueForPaying.removeCar();         
+        Car car = queueForPaying.removeCar();
+        if(car.getColor() == Color.green){
+        	revenue += 20;
+        	estimatedRevenue -= 20;
+        }
+        if(car.getColor() == Color.red){
+        	revenue += 10;
+        	estimatedRevenue -= 10;
+        }
+        if(car.getColor() == Color.black){
+        }
         carLeavesSpot(car);
         i++;
 	  }
@@ -242,6 +292,8 @@ private void carsLeaving(){
 	while (queueExit.carsInQueue()>0 && i < exitSpeed){
 		queueExit.removeCar();
         i++;
+        amountOfCars--;
+        
 	}	
 }
 
@@ -265,15 +317,13 @@ private void addArrivingCars(int numberOfCars, String type){
 	case AD_HOC: 
         for (int i = 0; i < numberOfCars; i++) {
         	queueCarEntrance.addCar(new AdHocCar());
-        	amountOfCars++;
-        	money += 50;
+        	queueLength++;
         }
         break;
 	case PASS:
         for (int i = 0; i < numberOfCars; i++) {
         	queuePassEntrance.addCar(new ParkingPassCar());
-        	amountOfCars++;
-        	money += 50;
+        	queueLength++;
         }
         break;	     
 	case ABO:
@@ -281,8 +331,7 @@ private void addArrivingCars(int numberOfCars, String type){
 //        	if(aboList.size() < 30){
 //        		subList.add("1");
         		queueAboEntrance.addCar(new AbonnementCar());
-            	amountOfCars++;
-            	money += 50;
+        		queueLength++;
            	}
 //        }
         break;
@@ -294,22 +343,6 @@ private void carLeavesSpot(Car car){
 	simulatorView.removeCarAt(car.getLocation());
     queueExit.addCar(car);
 }
-
-//cars paying
-/*public void moneyFromCars(){
-    Car car = new Car ;
-if (car instanceof AdHocCar){
-    money += 50;
-}  
-
-if (car instanceof ParkingPassCar){
-	money += 50;
-}
-	
-if (car instanceof AbonnementCar){
-	money += 50;
-}                           
-}*/
 }	
 
 

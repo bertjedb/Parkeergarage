@@ -21,9 +21,14 @@ public class SimulatorView extends JFrame implements ActionListener {
     private int numberOfOpenSpots;
     private Car[][][] cars;
     private ActionEvent event;
-    private JLabel moneyLabel;
+    private JLabel revenueLabel;
     private JLabel carLabel;
     private JLabel queueLabel;
+    private JLabel estimatedRevenueLabel;
+    
+    private JLabel adhocCarsLabel;
+    private JLabel passCarsLabel;
+    private JLabel aboCarsLabel;
 
     /*
      * Constructor voor class SimulatorView
@@ -49,24 +54,23 @@ public class SimulatorView extends JFrame implements ActionListener {
         buttons.setLayout(new GridLayout(1, 0));
 
         //Worden labels toegevoegd aan de Panel.
-        JPanel labels = new JPanel();
-        labels.setLayout(new GridLayout(1, 0));
+        JPanel labels1 = new JPanel();
+        labels1.setLayout(new GridLayout(1, 0));
         
-        //Buttons toegevoegd aan flow.
+        //Worden labels toegevoegd aan de Panel.
+        JPanel labels2 = new JPanel();
+        labels2.setLayout(new GridLayout(1, 0));
+        
+        //Buttons toegevoegd aan row1
         JPanel flow = new JPanel(new GridLayout(0, 1));
         flow.add(buttons);
-        
-        //labels toegevoegd aan flow2
-        JPanel flow2 = new JPanel(new GridLayout(1, 0));
-        flow2.add(labels);    
+        flow.add(labels1);
+        flow.add(labels2);
         
         //Plaatsing van de buttons onderin het scherm.
         contentPane.add(flow, BorderLayout.SOUTH );
         
-        //Plaatsing van de buttons onderin het scherm.
-        contentPane.add(flow2, BorderLayout.CENTER );
-        
-        //Zorgt dat simulatie in midden van het scherm komt.
+        //Zorgt dat simulatie bovenin van het scherm komt.
         contentPane.add(carParkView, BorderLayout.NORTH);
         
         //Start button
@@ -101,23 +105,48 @@ public class SimulatorView extends JFrame implements ActionListener {
         quitButton.addActionListener(this);
         buttons.add(quitButton);
 
-        //Money label
-        this.moneyLabel = new JLabel("Money");
-        moneyLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        moneyLabel.setText(String.valueOf(Model.getAmountOfMoney()));
-        labels.add(moneyLabel);
+        //Revenue label
+        this.revenueLabel = new JLabel("Revenue");
+        revenueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        revenueLabel.setText(String.valueOf(Model.getAmountOfRevenue()));
+        labels1.add(revenueLabel);
         
         //Number of Cars label
         this.carLabel = new JLabel("Cars in garage");
         carLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        carLabel.setText("Number of cars = " + Model.getAmountOfMoney() + "/540");
-        labels.add(carLabel);
+        carLabel.setText("Number of cars = " + Model.getAmountOfRevenue() + "/540");
+        labels1.add(carLabel);
         
-        //Number of Cars label
+        //Number of Cars in queue label
         this.queueLabel = new JLabel("Cars in queue");
-        carLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        carLabel.setText("Queue = " + Model.getAmountOfMoney());
-        labels.add(carLabel);
+        queueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        queueLabel.setText("Queue = " + Model.getQueueLength());
+        labels1.add(queueLabel);
+        
+        //Estimated revenue label
+        this.estimatedRevenueLabel = new JLabel("Estimated revenue");
+        estimatedRevenueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        estimatedRevenueLabel.setText(String.valueOf(Model.getEstimatedRevenue()));
+        labels1.add(estimatedRevenueLabel);
+             
+        //Amount of adhoccars label
+        this.adhocCarsLabel = new JLabel("adhocCarsLabel");
+        adhocCarsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        adhocCarsLabel.setText(String.valueOf(Model.getAmountOfAdHoc()));
+        labels2.add(adhocCarsLabel);
+        
+        //Amount of parkingpasscars label
+        this.passCarsLabel = new JLabel("passCarsLabel");
+        passCarsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        passCarsLabel.setText(String.valueOf(Model.getAmountOfPass()));
+        labels2.add(passCarsLabel);
+        
+        //Amount of abonnementcars label
+        this.aboCarsLabel = new JLabel("aboCarsLabel");
+        aboCarsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        aboCarsLabel.setText(String.valueOf(Model.getAmountOfAbo()));
+        labels2.add(aboCarsLabel);
+        
         
         pack();
         
@@ -194,9 +223,14 @@ public class SimulatorView extends JFrame implements ActionListener {
     }
     
     public  void updateLabels(){
-    	 if (moneyLabel != null && carLabel != null){
-    		 moneyLabel.setText("Total money: " + Model.getAmountOfMoney() + ",-");
+    	 if (revenueLabel != null && carLabel != null){
+    		 revenueLabel.setText("Total money: " + Model.getAmountOfRevenue() + ",-");
     		 carLabel.setText("Number of cars = " + Model.getAmountOfCars() + "/540");
+    		 queueLabel.setText("Length of queue = " + Model.getQueueLength());
+    		 estimatedRevenueLabel.setText("Estimated revenue: " + Model.getEstimatedRevenue() + ",-");
+    		 adhocCarsLabel.setText("Number of AdHocCars = " + Model.getAmountOfAdHoc());
+       		 passCarsLabel.setText("Number of ParkingPassCars = " + Model.getAmountOfPass());
+       		 aboCarsLabel.setText("Number of AbonnementCars = " + Model.getAmountOfAbo());
         }
     }
     
@@ -243,7 +277,6 @@ public class SimulatorView extends JFrame implements ActionListener {
             cars[location.getFloor()][location.getRow()][location.getPlace()] = car;
             car.setLocation(location);
             numberOfOpenSpots--;
-            Model.amountOfCars++;
             return true;
         }
         return false;
