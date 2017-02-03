@@ -63,9 +63,9 @@ public class SimulatorView extends JFrame implements ActionListener {
         
         //Buttons toegevoegd aan row1
         JPanel flow = new JPanel(new GridLayout(0, 1));
-        flow.add(buttons);
         flow.add(labels1);
         flow.add(labels2);
+        flow.add(buttons);
         
         //Plaatsing van de buttons onderin het scherm.
         contentPane.add(flow, BorderLayout.SOUTH );
