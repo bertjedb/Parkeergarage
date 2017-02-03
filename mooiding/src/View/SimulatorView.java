@@ -21,6 +21,8 @@ public class SimulatorView extends JFrame implements ActionListener {
     private int numberOfOpenSpots;
     private Car[][][] cars;
     private ActionEvent event;
+    private JLabel moneyLabel;
+    private JLabel carLabel;
 
     /*
      * Constructor voor class SimulatorView
@@ -49,7 +51,7 @@ public class SimulatorView extends JFrame implements ActionListener {
         labels.setLayout(new GridLayout(1, 0));
         
         //Buttons en labels toegevoegd aan flow.
-        JPanel flow = new JPanel(new GridLayout(1, 0));
+        JPanel flow = new JPanel(new GridLayout(0, 1));
         flow.add(buttons);
         flow.add(labels);    
         
@@ -94,9 +96,14 @@ public class SimulatorView extends JFrame implements ActionListener {
         //Money label
         JLabel moneyLabel = new JLabel("Money");
         moneyLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        moneyLabel.setText("Money = " + Model.Simulator.money);
+        moneyLabel.setText(String.valueOf(Model.Simulator.getAmountOfMoney()));
         labels.add(moneyLabel);
         
+        //Number of Cars label
+        JLabel carLabel = new JLabel("Cars in queue");
+        carLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        carLabel.setText("Number of cars = " + Model.Simulator.getAmountOfCars() + "/540");
+        labels.add(carLabel);
         
         pack();
         
@@ -212,6 +219,7 @@ public class SimulatorView extends JFrame implements ActionListener {
             cars[location.getFloor()][location.getRow()][location.getPlace()] = car;
             car.setLocation(location);
             numberOfOpenSpots--;
+            Model.Simulator.amountOfCars++;
             return true;
         }
         return false;
@@ -238,6 +246,32 @@ public class SimulatorView extends JFrame implements ActionListener {
      * Method om locatie van eerst volgende vrije plek op te vragen.
      */
     public Location getFirstFreeLocation() {
+        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
+            if(floor==0){
+        	for (int row = 2; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    if (getCarAt(location) == null) {
+                        return location;
+                    } 
+                    	
+                }
+            }
+        } else { 
+        	for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    if (getCarAt(location) == null) {
+                        return location;
+                    }
+                }
+        	 }
+          }
+       }
+      return null;
+    }
+    
+    public Location getFirstAboLocation() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {
