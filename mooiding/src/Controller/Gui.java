@@ -22,7 +22,7 @@ public class Gui implements ActionListener {
 	public void actionPerformed(ActionEvent e) {   
   	                
         String command = event.getActionCommand();
-        
+                
       //Zet actie achter "Step one minute" button.
         if(command == "Step one minute") {
         	Model.simulator.oneStep();                    
@@ -34,7 +34,7 @@ public class Gui implements ActionListener {
         }
         
       //Zet actie achter "Pause" button.
-        if(command == "Pause Program") {
+        if(command == "Pause") {
         	Model.simulator.pauseProgram();
         }
            
@@ -44,8 +44,22 @@ public class Gui implements ActionListener {
         }
         
       //Zet actie achter "Quit" button.                                
-        if (command == "Quit the program") {
+        if (command == "Quit") {
         	Model.simulator.quitProgram();                                        
-        }                                  
-	}
+        }      
+        //Zorgt dat je de simulatie sneller gaat.                                  
+        if (command == "Make sim faster") {
+        	if(Model.simulator.tickPause > 50){
+       	Model.simulator.tickPause -= 50;
+        View.SimulatorView.currentSpeed += 1;
+        }     
+        //Zorgt dat je de simulatie slomer gaat.                                  
+        if (command == "Make sim slower") {
+    	  if(Model.simulator.tickPause < 1500){
+        Model.simulator.tickPause += 50;
+        View.SimulatorView.currentSpeed -= 1;
+    	  }
+        }
+      }
+   }
 }

@@ -25,10 +25,14 @@ public class SimulatorView extends JFrame implements ActionListener {
     private JLabel carLabel;
     private JLabel queueLabel;
     private JLabel estimatedRevenueLabel;
+    private JLabel currentSpeedLabel;
+    public static int currentSpeed = 0;
     
     private JLabel adhocCarsLabel;
     private JLabel passCarsLabel;
-    private JLabel aboCarsLabel;
+    private JLabel resCarsLabel;
+    
+    private JLabel theTime;
 
     /*
      * Constructor voor class SimulatorView
@@ -52,26 +56,32 @@ public class SimulatorView extends JFrame implements ActionListener {
         //Worden buttons toegevoegd aan de Panel.
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(1, 0));
-
+        
         //Worden labels toegevoegd aan de Panel.
         JPanel labels1 = new JPanel();
         labels1.setLayout(new GridLayout(1, 0));
-        
+
         //Worden labels toegevoegd aan de Panel.
         JPanel labels2 = new JPanel();
         labels2.setLayout(new GridLayout(1, 0));
         
+        //Worden tijdlabels toegevoegd aan de Panel.
+        JPanel time = new JPanel();
+        time.setLayout(new GridLayout(1, 0));
+        
         //Buttons toegevoegd aan row1
         JPanel flow = new JPanel(new GridLayout(0, 1));
+        flow.add(time);
         flow.add(labels1);
         flow.add(labels2);
         flow.add(buttons);
+        
         
         //Plaatsing van de buttons onderin het scherm.
         contentPane.add(flow, BorderLayout.SOUTH );
         
         //Zorgt dat simulatie bovenin van het scherm komt.
-        contentPane.add(carParkView, BorderLayout.NORTH);
+        contentPane.add(carParkView, BorderLayout.CENTER);
         
         //Start button
         JButton startButton = new JButton("Start");
@@ -97,6 +107,18 @@ public class SimulatorView extends JFrame implements ActionListener {
         pauseButton.setPreferredSize(new Dimension(50, 50));
         pauseButton.addActionListener(this);
         buttons.add(pauseButton); 
+ 
+        //make sim faster button        
+        JButton fasterButton = new JButton("Make sim faster");
+        fasterButton.setPreferredSize(new Dimension(50, 50));
+        fasterButton.addActionListener(this);
+        buttons.add(fasterButton);
+        
+        //make sim slower button        
+        JButton slowerButton = new JButton("Make sim slower");
+        slowerButton.setPreferredSize(new Dimension(50, 50));
+        slowerButton.addActionListener(this);
+        buttons.add(slowerButton);
         
         //Quit button        
         JButton quitButton = new JButton("Quit");
@@ -108,44 +130,59 @@ public class SimulatorView extends JFrame implements ActionListener {
         //Revenue label
         this.revenueLabel = new JLabel("Revenue");
         revenueLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        revenueLabel.setText(String.valueOf(Model.getAmountOfRevenue()));
+        revenueLabel.setFont(new Font("Arial",Font.PLAIN, 16));
         labels1.add(revenueLabel);
         
         //Number of Cars label
         this.carLabel = new JLabel("Cars in garage");
         carLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        carLabel.setText("Number of cars = " + Model.getAmountOfRevenue() + "/540");
+        carLabel.setFont(new Font("Arial",Font.PLAIN, 16));
         labels1.add(carLabel);
         
         //Number of Cars in queue label
         this.queueLabel = new JLabel("Cars in queue");
         queueLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        queueLabel.setText("Queue = " + Model.getQueueLength());
+        queueLabel.setFont(new Font("Arial",Font.PLAIN, 16));
         labels1.add(queueLabel);
+        
+        //Current speed label
+        this.currentSpeedLabel = new JLabel("Current simulator speed");
+        currentSpeedLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        currentSpeedLabel.setFont(new Font("Arial",Font.PLAIN, 16));
+        labels1.add(currentSpeedLabel);
         
         //Estimated revenue label
         this.estimatedRevenueLabel = new JLabel("Estimated revenue");
         estimatedRevenueLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        estimatedRevenueLabel.setText(String.valueOf(Model.getEstimatedRevenue()));
-        labels1.add(estimatedRevenueLabel);
+        estimatedRevenueLabel.setFont(new Font("Arial",Font.PLAIN, 16));
+        labels2.add(estimatedRevenueLabel);
              
         //Amount of adhoccars label
         this.adhocCarsLabel = new JLabel("adhocCarsLabel");
         adhocCarsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        adhocCarsLabel.setText(String.valueOf(Model.getAmountOfAdHoc()));
+        adhocCarsLabel.setForeground(Color.green);
+        adhocCarsLabel.setFont(new Font("Arial",Font.PLAIN, 16));
         labels2.add(adhocCarsLabel);
         
         //Amount of parkingpasscars label
         this.passCarsLabel = new JLabel("passCarsLabel");
         passCarsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        passCarsLabel.setText(String.valueOf(Model.getAmountOfPass()));
+        passCarsLabel.setForeground(Color.red);
+        passCarsLabel.setFont(new Font("Arial",Font.PLAIN, 16));
         labels2.add(passCarsLabel);
         
         //Amount of abonnementcars label
-        this.aboCarsLabel = new JLabel("aboCarsLabel");
-        aboCarsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        aboCarsLabel.setText(String.valueOf(Model.getAmountOfAbo()));
-        labels2.add(aboCarsLabel);
+        this.resCarsLabel = new JLabel("ResCarsLabel");
+        resCarsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        resCarsLabel.setForeground(Color.black);
+        resCarsLabel.setFont(new Font("Arial",Font.PLAIN, 16));
+        labels2.add(resCarsLabel);
+        
+        //time label
+        this.theTime = new JLabel("dayOfTheWeek");
+        theTime.setHorizontalAlignment(SwingConstants.RIGHT);
+        theTime.setFont(new Font("Arial",Font.PLAIN, 25));
+        time.add(theTime);
         
         
         pack();
@@ -210,8 +247,22 @@ public class SimulatorView extends JFrame implements ActionListener {
                  //Zorgt dat je de simulatie kan stoppen.                                  
                 if (command == "Quit") {
                 	Model.simulator.quitProgram();                                        
-                }                
-            }          
+                }     
+                //Zorgt dat je de simulatie sneller gaat.                                  
+                if (command == "Make sim faster") {
+                	if(Model.simulator.tickPause > 50){
+               	    Model.simulator.tickPause -= 50;    
+                    currentSpeed += 1;
+                  } 
+                }
+                //Zorgt dat je de simulatie slomer gaat.                                  
+                if (command == "Make sim slower") {
+            	  if(Model.simulator.tickPause < 1500){
+                Model.simulator.tickPause += 50;
+                currentSpeed -= 1;
+            	  }
+                }
+              }              
         };        
         newThread.start();    
     }
@@ -224,13 +275,24 @@ public class SimulatorView extends JFrame implements ActionListener {
     
     public  void updateLabels(){
     	 if (revenueLabel != null && carLabel != null){
-    		 revenueLabel.setText("Total money: " + Model.getAmountOfRevenue() + ",-");
+    		 revenueLabel.setText("Revenue = " + Model.getAmountOfRevenue() + ",-");
+    		 
     		 carLabel.setText("Number of cars = " + Model.getAmountOfCars() + "/540");
+    		 
     		 queueLabel.setText("Length of queue = " + Model.getQueueLength());
+    		 
     		 estimatedRevenueLabel.setText("Estimated revenue: " + Model.getEstimatedRevenue() + ",-");
-    		 adhocCarsLabel.setText("Number of AdHocCars = " + Model.getAmountOfAdHoc());
-       		 passCarsLabel.setText("Number of ParkingPassCars = " + Model.getAmountOfPass());
-       		 aboCarsLabel.setText("Number of AbonnementCars = " + Model.getAmountOfAbo());
+    		 
+    		 adhocCarsLabel.setText("Amount of AdHocCars = " + Model.getAmountOfAdHoc());
+    		 
+       		 passCarsLabel.setText("Amount of ParkingPassCars = " + Model.getAmountOfPass());
+       		 
+       		 resCarsLabel.setText("Amount of ReservationCars = " + Model.getAmountOfRes());
+       		 
+       		 theTime.setText(Model.getDayOfTheWeek()+ "  " + Model.getHourOfTheDay() + ":" + Model.getMinutesOfTheHour() + ":00" + "                  ");
+       	                                                                              //If its stupid but it works, it ain't stupid. :)   ^
+       		 
+       		 currentSpeedLabel.setText("Current sim speed = " + currentSpeed);
         }
     }
     
@@ -328,7 +390,7 @@ public class SimulatorView extends JFrame implements ActionListener {
       return null;
     }
     
-    public Location getFirstAboLocation() {
+    public Location getFirstResLocation() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {

@@ -9,11 +9,11 @@ package Model;
 import java.util.Random;
 import java.awt.*;
 
-public class AbonnementCar extends Car {
+public class ReservationCar extends Car {
 	private static final Color COLOR=Color.black;
 	
 	//Constructor AbonnementCar
-    public AbonnementCar() {
+    public ReservationCar() {
     	Random random = new Random();	//Nieuwe random
     	int stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);	//stayMinutes wordt hier berekend.
         this.setMinutesLeft(stayMinutes);	//SetMinutesLeft wordt gereset doormiddel van stayMinutes.

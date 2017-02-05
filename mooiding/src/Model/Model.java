@@ -1,10 +1,6 @@
 package Model;
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Random;
-
-import com.sun.glass.ui.View;
-
 import View.SimulatorView;
 
 /**
@@ -19,15 +15,13 @@ public class Model implements Runnable{
 	//Constants for cars
 	private static final String AD_HOC = "1";
 	private static final String PASS = "2";
-	private static final String ABO = "3";
+	private static final String RES = "3";
 	//Instantie variabelen.
 	public static Model simulator;
-	private ArrayList<Car> aboList;
-	private ArrayList<String> subList;
 	private static QueueCars queueForPaying;
 	private QueueCars queuePassEntrance;
 	private QueueCars queueCarEntrance;
-	private QueueCars queueAboEntrance;
+	private QueueCars queueResEntrance;
     private QueueCars queueExit;
     public static int revenue = 0;
     public static int estimatedRevenue = 0;
@@ -37,13 +31,16 @@ public class Model implements Runnable{
     
     private static int amountOfAdHoc = 0;
     private static int amountOfPass = 0;
-    private static int amountOfAbo = 0;
+    private static int amountOfRes = 0;
     
-    private int day = 0; 
-    private int hour = 0;
-    private int minute = 0;
-    private int tickPause = 500;
-
+    public static int day = 1; 
+    private static int hour = 0;
+    private static int minute = 0;
+    public int tickPause = 500;
+    private static String dayOfTheWeek = "Monday";
+    private static String fullHourTime = "00";
+    private static String fullMinuteTime = "00";
+    
     // Program running state
     private boolean run = false;
     
@@ -51,8 +48,8 @@ public class Model implements Runnable{
     int weekendArrivals = 200; // average number of arriving cars per hour
     int weekDayPassArrivals= 80; // average number of arriving parking pass cars per hour
     int weekendPassArrivals = 5; // average number of arriving parking pass cars per hour
-    int weekDayAboArrivals= 20; // average number of arriving abo cars per hour
-    int weekendAboArrivals = 10; // average number of arriving abo cars per hour
+    int weekDayResArrivals= 20; // average number of arriving abo cars per hour
+    int weekendResArrivals = 10; // average number of arriving abo cars per hour
     
     int enterSpeed = 1; // number of cars that can enter per minute
     int paymentSpeed = 5; // number of cars that can pay per minute
@@ -66,7 +63,7 @@ public class Model implements Runnable{
 public Model() {
 	queueCarEntrance = new QueueCars();
 	queuePassEntrance = new QueueCars();
-	queueAboEntrance = new QueueCars();
+	queueResEntrance = new QueueCars();
 	queueForPaying = new QueueCars();
 	queueExit = new QueueCars();
 	//simulatorView = new SimulatorView(3, 6, 30, this); // declare a fourth one
@@ -80,17 +77,17 @@ public static int getAmountOfRevenue(){
 	return revenue;
 }
 
-//method for returning amount of revenue
+//method for returning amount of adhoc cars
 public static int getAmountOfAdHoc(){
 	return amountOfAdHoc;
 }
-//method for returning amount of revenue
+//method for returning amount of parking pass cars
 public static int getAmountOfPass(){
 	return amountOfPass;
 }
-//method for returning amount of revenue
-public static int getAmountOfAbo(){
-	return amountOfAbo;
+//method for returning amount of reservation cars
+public static int getAmountOfRes(){
+	return amountOfRes;
 }
 
 
@@ -99,14 +96,29 @@ public static int getEstimatedRevenue(){
 	return estimatedRevenue;
 }
 
-//method for returning amount of cars
+//method for returning total amount of cars
 public static int getAmountOfCars(){
 	return amountOfCars;
 }
 
-//method for returning amount of cars
+//method for returning amount of cars in queue
 public static int getQueueLength(){
 	return queueLength;
+}
+
+//method to get the day of the week
+public static String getDayOfTheWeek(){
+	return dayOfTheWeek;
+}
+
+//method to get the hour of the day
+public static String getHourOfTheDay(){
+	return fullHourTime;
+}
+
+//method to get the minutes of the hour
+public static String getMinutesOfTheHour(){
+	return fullMinuteTime;
 }
 
 // Method for starting the program
@@ -154,6 +166,8 @@ private void tick() {
 	advanceTime();
 	handleExit();
 	updateViews();
+	dayOfTheWeek();
+	addAZero();
 //	View.SimulatorView.updateLabels();
 	// Pause.
     try {
@@ -179,12 +193,54 @@ public void advanceTime() {
             day -= 7;
         }
 	}
+
+
+//Method to see which day it is
+public void dayOfTheWeek(){
+	if(day == 1){
+		dayOfTheWeek = "Monday";
+	}
+	if(day == 2){
+		dayOfTheWeek = "Tuesday";
+	}
+	if(day == 3){
+		dayOfTheWeek = "Wednesday";
+	}
+	if(day == 4){
+		dayOfTheWeek = "Thursday";
+	}
+	if(day == 5){
+		dayOfTheWeek = "Friday";
+	}
+	if(day == 6){
+		dayOfTheWeek = "Saturday";
+	}
+	if(day == 7){
+		dayOfTheWeek = "Sunday";
+	}
+}
+
+//method to add a 0 if the time is smaller than 10
+public void addAZero(){
+	if(hour < 10){
+		fullHourTime = "0" + hour;
+	} else { 
+		fullHourTime = "" + hour;
+	}
+	
+	if(minute < 10){
+		fullMinuteTime = "0" + minute;
+	} else { 
+		fullMinuteTime = "" + minute;
+	}
+}
+
 //Inrijden van garage
 private void handleEntrance(){
 	carsArriving();
 	carsEntering(queuePassEntrance);
 	carsEntering(queueCarEntrance);  
-	carsEntering(queueAboEntrance); 
+	carsEntering(queueResEntrance); 
 }
 
 //Uitrijden van garage
@@ -207,8 +263,8 @@ private void carsArriving(){
     addArrivingCars(numberOfCars, AD_HOC);    	
 	numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
     addArrivingCars(numberOfCars, PASS);    	
-    numberOfCars=getNumberOfCars(weekDayAboArrivals, weekendAboArrivals);
-    addArrivingCars(numberOfCars, ABO);  
+    numberOfCars=getNumberOfCars(weekDayResArrivals, weekendResArrivals);
+    addArrivingCars(numberOfCars, RES);  
 }
 
 //Aantal auto's die garage binnen gaan.
@@ -221,7 +277,7 @@ private void carsEntering(QueueCars queue){
         Car car = queue.removeCar();
         
         if(car.getColor() == Color.black){
-        	Location subLocation = simulatorView.getFirstAboLocation();
+        	Location subLocation = simulatorView.getFirstResLocation();
         	simulatorView.setCarAt(subLocation, car);
         	queueLength--;
         	amountOfCars++;
@@ -241,7 +297,7 @@ private void carsEntering(QueueCars queue){
             }
         }
         if(car.getColor() == Color.black){
-        	amountOfAbo++;
+        	amountOfRes++;
         }
     
         i++;       
@@ -326,11 +382,11 @@ private void addArrivingCars(int numberOfCars, String type){
         	queueLength++;
         }
         break;	     
-	case ABO:
+	case RES:
         for (int i = 0; i < numberOfCars; i++) {
 //        	if(aboList.size() < 30){
 //        		subList.add("1");
-        		queueAboEntrance.addCar(new AbonnementCar());
+        		queueResEntrance.addCar(new ReservationCar());
         		queueLength++;
            	}
 //        }

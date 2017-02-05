@@ -19,6 +19,7 @@ public class CarParkView extends JPanel {
 	private Dimension size;
     private Image carParkImage; 
     private SimulatorView simulatorView;
+    public static CarParkView carParkView;
 
     /**
      * Constructor for objects of class CarPark
