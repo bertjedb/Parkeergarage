@@ -46,14 +46,14 @@ public class Model implements Runnable{
     
     int weekDayArrivals= 100; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
-    int weekDayPassArrivals= 80; // average number of arriving parking pass cars per hour
+    int weekDayPassArrivals= 50; // average number of arriving parking pass cars per hour
     int weekendPassArrivals = 5; // average number of arriving parking pass cars per hour
     int weekDayResArrivals= 20; // average number of arriving abo cars per hour
     int weekendResArrivals = 10; // average number of arriving abo cars per hour
     
     int enterSpeed = 1; // number of cars that can enter per minute
     int paymentSpeed = 5; // number of cars that can pay per minute
-    int exitSpeed = 1; // number of cars that can leave per minute
+    int exitSpeed = 2; // number of cars that can leave per minute
     
     public static void main(String[] args){
          simulator = new Model();
@@ -66,7 +66,6 @@ public Model() {
 	queueResEntrance = new QueueCars();
 	queueForPaying = new QueueCars();
 	queueExit = new QueueCars();
-	//simulatorView = new SimulatorView(3, 6, 30, this); // declare a fourth one
 	simulatorView = new SimulatorView(3, 6, 30); // declare a fourth one
 
 
@@ -259,12 +258,14 @@ private void updateViews(){
 
 //Aantal arriverende auto's. 
 private void carsArriving(){
+	if(queueLength < 50){
 	int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
     addArrivingCars(numberOfCars, AD_HOC);    	
 	numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
     addArrivingCars(numberOfCars, PASS);    	
     numberOfCars=getNumberOfCars(weekDayResArrivals, weekendResArrivals);
-    addArrivingCars(numberOfCars, RES);  
+    addArrivingCars(numberOfCars, RES); 
+	}
 }
 
 //Aantal auto's die garage binnen gaan.
@@ -273,7 +274,7 @@ private void carsEntering(QueueCars queue){
     // Remove car from the front of the queue and assign to a parking space.
 	while (queue.carsInQueue()>0 && 
 			simulatorView.getNumberOfOpenSpots()>0 && 
-			i<enterSpeed) {
+			i<enterSpeed && amountOfCars < 540){
         Car car = queue.removeCar();
         
         if(car.getColor() == Color.black){
@@ -281,25 +282,24 @@ private void carsEntering(QueueCars queue){
         	simulatorView.setCarAt(subLocation, car);
         	queueLength--;
         	amountOfCars++;
+        	amountOfRes++;
         }
         Location freeLocation = simulatorView.getFirstFreeLocation();
         if(car.getColor() == Color.green || car.getColor() == Color.red){
         simulatorView.setCarAt(freeLocation, car);
-            queueLength--;
-            amountOfCars++;
             if(car.getColor() == Color.green){
             	estimatedRevenue += 20;
             	amountOfAdHoc++;
+                amountOfCars++;
+                queueLength--;
             }
             if(car.getColor() == Color.red){
             	estimatedRevenue += 10;
             	amountOfPass++;
+                amountOfCars++;
+                queueLength--;
             }
-        }
-        if(car.getColor() == Color.black){
-        	amountOfRes++;
-        }
-    
+        }    
         i++;       
     }
 }
@@ -334,10 +334,9 @@ private void carsPaying(){
         	revenue += 10;
         	estimatedRevenue -= 10;
         }
-        if(car.getColor() == Color.black){
-        }
         carLeavesSpot(car);
         i++;
+        
 	  }
 }    
 
@@ -347,9 +346,8 @@ private void carsLeaving(){
 	int i=0;
 	while (queueExit.carsInQueue()>0 && i < exitSpeed){
 		queueExit.removeCar();
-        i++;
-        amountOfCars--;
-        
+		amountOfCars--;
+        i++;      
 	}	
 }
 
@@ -384,12 +382,9 @@ private void addArrivingCars(int numberOfCars, String type){
         break;	     
 	case RES:
         for (int i = 0; i < numberOfCars; i++) {
-//        	if(aboList.size() < 30){
-//        		subList.add("1");
         		queueResEntrance.addCar(new ReservationCar());
         		queueLength++;
            	}
-//        }
         break;
 	}
 }
@@ -398,6 +393,15 @@ private void addArrivingCars(int numberOfCars, String type){
 private void carLeavesSpot(Car car){
 	simulatorView.removeCarAt(car.getLocation());
     queueExit.addCar(car);
+    if(car.getColor() == Color.green){
+    	amountOfAdHoc--;
+    }
+    if(car.getColor() == Color.black){
+    	amountOfRes--;
+    }
+    if(car.getColor() == Color.red){
+    	amountOfPass--;
+    }
 }
 }	
 
